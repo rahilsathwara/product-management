@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: product-management
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_db
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
+
+jwt:
+  secret-token: 357638792F423F4428472B4B6250655368566D597133743677397A1234569870
+  expiration-time: 1800000
+  refresh-token-expiration-time: 86400000
