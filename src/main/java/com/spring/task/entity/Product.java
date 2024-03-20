@@ -46,10 +46,13 @@ public class Product implements Serializable {
     @Column(name = "expiry_date")
     private LocalDateTime expiryDate;
 
-    @Column(name = "user_id")
-    private String userId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private User user;
 
-    private String inventory;
+    private int inventory;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

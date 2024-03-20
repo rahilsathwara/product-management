@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -23,4 +24,6 @@ public interface UserService {
     UserResponse getCurrentUserProfile(String userName);
 
     String logoutUser(HttpServletRequest request, HttpServletResponse response);
+
+    Optional<User> getUserById(String userId);
 }

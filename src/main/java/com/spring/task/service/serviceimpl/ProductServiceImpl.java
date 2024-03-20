@@ -2,6 +2,7 @@ package com.spring.task.service.serviceimpl;
 
 import com.spring.task.entity.Category;
 import com.spring.task.entity.Product;
+import com.spring.task.entity.User;
 import com.spring.task.exception.ResourceAlreadyExistException;
 import com.spring.task.exception.ResourceNotFoundException;
 import com.spring.task.payload.request.ProductRequest;
@@ -10,6 +11,7 @@ import com.spring.task.payload.response.ProductResponse;
 import com.spring.task.repository.ProductRepository;
 import com.spring.task.service.CategoryService;
 import com.spring.task.service.ProductService;
+import com.spring.task.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -61,10 +64,17 @@ public class ProductServiceImpl implements ProductService {
                     return new ResourceNotFoundException("Category Not found with ID: " + productRequest.getCategoryId());
                 });
 
+        // validate user
+        User user = userService.getUserById(productRequest.getUserId())
+                .orElseThrow(() -> {
+                    logger.error("User not found with ID: {}", productRequest.getUserId());
+                    return new ResourceNotFoundException("User not found with ID: " + productRequest.getUserId());
+                });
 
         Product newProduct = new Product();
         BeanUtils.copyProperties(productRequest, newProduct);
         newProduct.setCategory(category);
+        newProduct.setUser(user);
         logger.info("Product request validated successfully for product: {}", productRequest.getName());
         return newProduct;
     }
@@ -116,6 +126,13 @@ public class ProductServiceImpl implements ProductService {
                     return new ResourceNotFoundException("Category Not found with ID: " + productRequest.getCategoryId());
                 });
 
+        // validate user
+        User user = userService.getUserById(productRequest.getUserId())
+                .orElseThrow(() -> {
+                    logger.error("User not found with ID: {}", productRequest.getUserId());
+                    return new ResourceNotFoundException("User not found with ID: " + productRequest.getUserId());
+                });
+
         product.setName(productRequest.getName());
         product.setDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice());
@@ -123,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
         product.setWeightUnit(productRequest.getWeightUnit());
         product.setBrand(productRequest.getBrand());
         product.setCategory(category);
-        product.setUserId(productRequest.getUserId());
+        product.setUser(user);
         product.setInventory(productRequest.getInventory());
         product.setUpdatedAt(LocalDateTime.now());
 
@@ -138,6 +155,7 @@ public class ProductServiceImpl implements ProductService {
         ProductResponse productResponse = new ProductResponse();
         BeanUtils.copyProperties(savedProduct, productResponse);
         productResponse.setCategory(categoryResponse);
+        productResponse.setUserResponse(userService.mapEntityToResponse(savedProduct.getUser()));
 
         return productResponse;
     }

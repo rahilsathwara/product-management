@@ -47,6 +47,6 @@ public class ProductRequest {
     @NotEmpty(message = "User ID is required")
     private String userId;
 
-    @NotEmpty(message = "Inventory is required")
-    private String inventory;
+    @NotNull(message = "Inventory is required")
+    private int inventory;
 }

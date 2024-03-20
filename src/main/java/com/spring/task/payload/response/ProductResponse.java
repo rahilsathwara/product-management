@@ -23,8 +23,8 @@ public class ProductResponse {
     private String brand;
     private CategoryResponse category;
     private LocalDateTime expiryDate;
-    private String userId;
-    private String inventory;
+    private UserResponse userResponse;
+    private int inventory;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
